@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sachin | Dashboard</title>
     <style>
-        /* Apple uses a font called SF Pro. We'll use Inter, which is the closest free alternative */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Space+Mono:wght@400;700&display=swap');
 
         * {
             margin: 0;
@@ -26,6 +25,7 @@
             --accent-hover: #0077ed;
             --success: #30d158;
             --danger: #ff453a;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         body.light-mode {
@@ -36,6 +36,7 @@
             --text-muted: #515154;
             --accent: #0071e3;
             --accent-hover: #0077ed;
+            --border: rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -49,7 +50,7 @@
             transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
         }
 
-        /* Floating Header */
+        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -63,19 +64,26 @@
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border);
             transition: background 0.4s ease;
         }
 
-        body.light-mode .header {
-            background: rgba(245, 245, 247, 0.7);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
+        body.light-mode .header { background: rgba(245, 245, 247, 0.7); }
 
-        .header-title {
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             font-weight: 600;
             font-size: 1rem;
-            letter-spacing: -0.01em;
+        }
+
+        .weather-widget {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .theme-toggle {
@@ -87,9 +95,7 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
 
         /* Main Container */
         .container {
@@ -98,57 +104,44 @@
             padding: 100px 24px 60px 24px;
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 20px;
         }
 
-        /* Apple-style typography */
+        /* Typography */
         .hero-title {
-            font-size: clamp(3rem, 8vw, 5rem);
+            font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
             letter-spacing: -0.04em;
             line-height: 1.05;
             text-align: center;
-            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        body.light-mode .hero-title {
-            background: linear-gradient(135deg, #000 0%, #666 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
         }
 
         .hero-subtitle {
             text-align: center;
             color: var(--text-muted);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 400;
             margin-bottom: 20px;
+            font-variant-numeric: tabular-nums;
         }
 
-        /* Cards with deep smooth shadows */
+        /* Cards */
         .card {
             background: var(--bg-card);
             border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, box-shadow 0.4s ease;
+            padding: 30px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
             opacity: 0;
-            transform: translateY(40px); /* For scroll animation */
+            transform: translateY(40px); 
         }
 
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .card:hover {
-            background: var(--bg-card-hover);
-            transform: scale(1.02);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
+        .card.visible { opacity: 1; transform: translateY(0); }
+        .card:hover { background: var(--bg-card-hover); }
 
         .card-title {
             font-size: 0.85rem;
@@ -157,6 +150,9 @@
             letter-spacing: 0.05em;
             color: var(--text-muted);
             margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .mono-value {
@@ -166,22 +162,12 @@
             letter-spacing: -0.02em;
         }
 
-        /* Grid Layout for stats */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .grid-2 { grid-template-columns: 1fr; }
-        }
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
         /* Progress Bars */
-        .progress-wrapper {
-            margin-top: 20px;
-        }
-
+        .progress-wrapper { margin-top: 15px; }
         .progress-labels {
             display: flex;
             justify-content: space-between;
@@ -192,159 +178,129 @@
         }
 
         .progress-bg {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        body.light-mode .progress-bg {
-            background: rgba(0,0,0,0.1);
+            width: 100%; height: 8px;
+            background: var(--border);
+            border-radius: 4px; overflow: hidden;
         }
 
         .progress-fill {
-            height: 100%;
-            width: 0%;
+            height: 100%; width: 0%;
             background: var(--text-main);
             border-radius: 4px;
             transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         .progress-fill.blue { background: var(--accent); }
         .progress-fill.green { background: var(--success); }
 
-        /* Input Area */
-        .input-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .input-row input {
-            flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid transparent;
-            padding: 16px 20px;
-            border-radius: 16px;
+        /* Buttons */
+        .btn {
+            background: var(--border);
             color: var(--text-main);
-            font-size: 1rem;
-            font-weight: 500;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        body.light-mode .input-row input {
-            background: rgba(0,0,0,0.05);
-        }
-
-        .input-row input:focus {
-            border-color: var(--accent);
-            background: transparent;
-            box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.1);
-        }
-
-        .input-row button {
-            background: var(--accent);
-            color: white;
             border: none;
-            padding: 0 24px;
-            border-radius: 16px;
-            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        .btn:hover { background: var(--text-muted); color: var(--bg-main); }
 
-        .input-row button:hover {
-            background: var(--accent-hover);
-            transform: scale(1.05);
+        /* Bucket List Input */
+        .input-row { display: flex; gap: 12px; margin-top: 15px; }
+        .input-row input {
+            flex: 1;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid transparent;
+            padding: 14px 20px;
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 1rem; font-weight: 500;
+            outline: none; transition: all 0.3s ease;
         }
-
-        .input-row button:active {
-            transform: scale(0.95);
+        .input-row input:focus { border-color: var(--accent); background: transparent; }
+        .input-row button {
+            background: var(--accent); color: white; border: none;
+            padding: 0 24px; border-radius: 16px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
         }
 
         /* Task List */
-        #bucket-list {
-            list-style: none;
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        #bucket-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         #bucket-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: rgba(128, 128, 128, 0.05);
+            border-radius: 16px; animation: slideUp 0.4s ease-out forwards;
         }
-
-        body.light-mode #bucket-list li {
-            background: rgba(0,0,0,0.03);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #bucket-list li:hover {
-            background: rgba(255,255,255,0.08);
-        }
-
-        #bucket-list li.completed span {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .task-actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 5px;
-            transition: transform 0.2s ease;
-        }
-
-        .task-actions button:hover { transform: scale(1.2); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #bucket-list li.completed span { text-decoration: line-through; color: var(--text-muted); }
+        .task-actions button { background: none; border: none; cursor: pointer; font-size: 1.1rem; }
         .btn-complete { color: var(--success); }
         .btn-delete { color: var(--danger); }
 
-        .quote {
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            font-weight: 400;
-            margin-top: 20px;
-            font-size: 1.1rem;
+        /* Habit Tracker */
+        .habit-box {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(128, 128, 128, 0.1); padding: 20px; border-radius: 16px; margin-top: 15px;
         }
+        .streak-flame { font-size: 1.5rem; margin-right: 10px; }
+        
+        /* Music Widget */
+        .music-box { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .album-art {
+            width: 50px; height: 50px; border-radius: 8px;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+        .music-info { display: flex; flex-direction: column; }
+        .music-title { font-weight: 600; font-size: 1rem; }
+        .music-artist { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Terminal / Typewriter */
+        .terminal {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+            background: #000;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .cursor { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="header-title">Sachin's Dashboard</div>
+        <div class="header-left">
+            <div>Sachin OS</div>
+            <div class="weather-widget">☀️ 28°C</div>
+        </div>
         <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
     </div>
 
     <div class="container">
         <!-- Hero Section -->
         <div>
-            <h1 class="hero-title">Your Life.<br>In Real Time.</h1>
+            <h1 class="hero-title" id="greeting">Hello, Sachin.</h1>
             <p class="hero-subtitle" id="live-clock">Syncing...</p>
+        </div>
+
+        <!-- Terminal / Typewriter -->
+        <div class="card reveal" style="padding: 20px; background: transparent; box-shadow: none;">
+            <div class="terminal">
+                <span id="terminal-text"></span><span class="cursor">_</span>
+            </div>
         </div>
 
         <!-- Age Stats -->
         <div class="grid-2">
             <div class="card reveal">
-                <div class="card-title">Current Age</div>
+                <div class="card-title">
+                    Current Age 
+                    <button class="btn" onclick="toggleAgeFormat()">Switch</button>
+                </div>
                 <div class="mono-value" id="age-display">0</div>
             </div>
             <div class="card reveal">
@@ -367,7 +323,7 @@
                     <span id="life-percent">0%</span>
                 </div>
                 <div class="progress-bg">
-                    <div class="progress-bar-fill" id="life-progress-fill" class="progress-fill blue"></div>
+                    <div class="progress-fill blue" id="life-progress-fill"></div>
                 </div>
             </div>
 
@@ -382,68 +338,141 @@
             </div>
         </div>
 
+        <!-- Habit Tracker -->
+        <div class="card reveal">
+            <div class="card-title">Daily Habit Streak</div>
+            <div class="habit-box">
+                <div>
+                    <span class="streak-flame">🔥</span>
+                    <strong id="streak-count">0</strong> Day Streak
+                </div>
+                <button class="btn" style="background: var(--success); color: white;" onclick="logHabit()">Log Today</button>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <div class="card reveal">
+            <div class="card-title">Spotify Now Playing</div>
+            <div class="music-box">
+                <div class="album-art" id="album-art"></div>
+                <div class="music-info">
+                    <div class="music-title" id="song-title">Starboy</div>
+                    <div class="music-artist" id="song-artist">The Weeknd</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Bucket List -->
         <div class="card reveal">
             <div class="card-title">Bucket List</div>
             <div class="input-row">
-                <input type="text" id="task-input" placeholder="What do you want to achieve?" maxlength="40">
+                <input type="text" id="task-input" placeholder="Add a life goal..." maxlength="40">
                 <button onclick="addTask()">Add</button>
             </div>
-            <ul id="bucket-list">
-                <!-- Tasks appear here -->
-            </ul>
+            <ul id="bucket-list"></ul>
         </div>
-
-        <div class="quote reveal" id="daily-quote"></div>
+        
     </div>
 
     <script>
-        // --- 1. SCROLL ANIMATIONS (Apple Style) ---
+        // --- 1. SCROLL ANIMATIONS ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    // Add a slight delay to each card for a staggered effect
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, index * 100);
+                    setTimeout(() => { entry.target.classList.add('visible'); }, index * 50);
                 }
             });
         }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        document.querySelectorAll('.reveal').forEach((el) => {
-            observer.observe(el);
-        });
+        // --- 2. DYNAMIC GREETING & TERMINAL ---
+        const hour = new Date().getHours();
+        let greeting = "Hello, Sachin.";
+        if (hour < 12) greeting = "Good Morning, Sachin.";
+        else if (hour < 18) greeting = "Good Afternoon, Sachin.";
+        else greeting = "Good Evening, Sachin.";
+        document.getElementById('greeting').innerText = greeting;
 
+        const terminalLines = [
+            "> Initializing user profile: Sachin...",
+            "> Syncing biometric data...",
+            "> Loading bucket list from local storage...",
+            "> Systems optimal. Have a great day."
+        ];
+        let lineIndex = 0;
+        let charIndex = 0;
+        const terminalEl = document.getElementById('terminal-text');
+        
+        function typeTerminal() {
+            if (lineIndex < terminalLines.length) {
+                if (charIndex < terminalLines[lineIndex].length) {
+                    terminalEl.innerHTML += terminalLines[lineIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeTerminal, 30); // typing speed
+                } else {
+                    terminalEl.innerHTML += "<br>";
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeTerminal, 500); // pause between lines
+                }
+            }
+        }
+        setTimeout(typeTerminal, 1000);
 
-        // --- 2. DASHBOARD CALCULATIONS ---
+        // --- 3. MOCK WEATHER & MUSIC ---
+        const weatherOptions = ["☀️ 28°C", "⛅ 24°C", "🌧️ 19°C", "🌙 22°C"];
+        document.querySelector('.weather-widget').innerText = weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
+
+        const songs = [
+            { title: "Blinding Lights", artist: "The Weeknd", color: "linear-gradient(45deg, #ff0000, #ff7f00)" },
+            { title: "Shape of You", artist: "Ed Sheeran", color: "linear-gradient(45deg, #00c6ff, #0072ff)" },
+            { title: "Starboy", artist: "The Weeknd", color: "linear-gradient(45deg, #8e2de2, #4a00e0)" },
+            { title: "Levitating", artist: "Dua Lipa", color: "linear-gradient(45deg, #f953c6, #b91d73)" }
+        ];
+        const randomSong = songs[Math.floor(Math.random() * songs.length)];
+        document.getElementById('song-title').innerText = randomSong.title;
+        document.getElementById('song-artist').innerText = randomSong.artist;
+        document.getElementById('album-art').style.background = randomSong.color;
+
+        // --- 4. CALCULATIONS & AGE FORMAT ---
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
         const expectedLifespanYears = 80;
+        let showSeconds = false;
+
+        function toggleAgeFormat() {
+            showSeconds = !showSeconds;
+            updateDashboard();
+        }
 
         function updateDashboard() {
             const now = new Date();
             document.getElementById('live-clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            // Age & Remaining
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
+            const secondsLived = Math.floor(msSinceBirth / 1000);
 
-            document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(8);
+            if (showSeconds) {
+                document.getElementById('age-display').innerText = secondsLived.toLocaleString();
+                document.getElementById('age-display').style.color = "var(--success)";
+            } else {
+                document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(8);
+                document.getElementById('age-display').style.color = "var(--text-main)";
+            }
+
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
-            // Life Progress
             const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('life-progress-fill').style.width = lifePercent + "%";
             document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
 
-            // Day Progress
             const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
             const dayPercent = ((now - startOfDay) / (endOfDay - startOfDay)) * 100;
             document.getElementById('day-progress-fill').style.width = dayPercent + "%";
             document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
 
-            // Birthday Countdown
             let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
             if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
             const diff = nextBirthday - now;
@@ -454,19 +483,7 @@
             document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
 
-        // --- 3. DAILY QUOTE ---
-        const quotes = [
-            "The people who are crazy enough to think they can change the world are the ones who do.",
-            "Your time is limited, so don't waste it living someone else's life.",
-            "Design is not just what it looks like and feels like. Design is how it works.",
-            "Simplicity is the ultimate sophistication.",
-            "Innovation distinguishes between a leader and a follower."
-        ];
-        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-        document.getElementById('daily-quote').innerText = `"${quotes[dayOfYear % quotes.length]}"`;
-
-
-        // --- 4. BUCKET LIST LOGIC ---
+        // --- 5. BUCKET LIST LOGIC ---
         const taskInput = document.getElementById('task-input');
         const bucketList = document.getElementById('bucket-list');
         let tasks = JSON.parse(localStorage.getItem('sachinTasks')) || [];
@@ -485,10 +502,7 @@
         }
 
         function toggleTask(id) {
-            tasks = tasks.map(task => {
-                if (task.id === id) return { ...task, completed: !task.completed };
-                return task;
-            });
+            tasks = tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task);
             saveTasks();
         }
 
@@ -506,27 +520,4 @@
                     <span style="font-weight: 500;">${task.text}</span>
                     <div class="task-actions">
                         <button class="btn-complete" onclick="toggleTask(${task.id})">✔</button>
-                        <button class="btn-delete" onclick="deleteTask(${task.id})">✖</button>
-                    </div>
-                `;
-                bucketList.appendChild(li);
-            });
-        }
-
-        taskInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') addTask();
-        });
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const btn = document.getElementById('theme-btn');
-            btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        }
-
-        // Initialize
-        renderTasks();
-        updateDashboard();
-        setInterval(updateDashboard, 1000); 
-    </script>
-</body>
-</html>
+                        <button clas
