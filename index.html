@@ -26,6 +26,7 @@
             padding: 20px;
         }
 
+        /* Load Animation */
         .dashboard {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -59,20 +60,30 @@
             color: #94a3b8;
             margin-bottom: 30px;
             font-variant-numeric: tabular-nums;
+            /* Smooth pulse animation for the clock */
+            animation: pulse 2s infinite alternate;
         }
 
+        @keyframes pulse {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        /* Hover & Tap Animations for Boxes */
         .stat-box {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
         }
 
-        .stat-box:hover {
+        .stat-box:hover, .stat-box:active {
             transform: translateY(-5px);
             border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.1);
         }
 
         .stat-title {
@@ -111,20 +122,31 @@
             overflow: hidden;
         }
 
+        /* Progress Bar Animation */
         .progress-bar-fill {
             height: 100%;
-            width: 35%; /* Will be calculated by JS */
+            width: 0%; /* Starts at 0 for the animation */
             background: linear-gradient(90deg, #38bdf8, #a855f7);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-            transition: width 1s ease-in-out;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth slide-in */
         }
 
-        footer {
-            margin-top: 40px;
-            font-size: 0.8rem;
-            color: #64748b;
+        /* Glowing animation on the bar */
+        .progress-bar-fill::after {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 2s infinite;
         }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
     </style>
 </head>
 <body>
@@ -153,8 +175,6 @@
                 <div class="progress-bar-fill" id="progress-fill"></div>
             </div>
         </div>
-
-        <footer>Live tracking active • Built for the modern web</footer>
     </div>
 
     <script>
@@ -166,27 +186,25 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Age Calculations
+        // Age Calculations & Animations
         function updateStats() {
-            // Get the exact numbers from your original site
             const exactAge = 27.912006945791216;
             const yearsLeft = 52.087993054208781;
 
-            // Format to show only 4 decimal places to prevent the UI from breaking
             document.getElementById('age-display').innerText = exactAge.toFixed(4) + " years";
             document.getElementById('remaining-display').innerText = yearsLeft.toFixed(4) + " years";
 
-            // Calculate Life Progress Percentage
             const totalLife = exactAge + yearsLeft;
             const progressPercent = (exactAge / totalLife) * 100;
 
-            // Animate the progress bar
+            // Wait a tiny bit for the page to load, then trigger the progress bar animation
             setTimeout(() => {
                 document.getElementById('progress-fill').style.width = progressPercent + "%";
-            }, 500);
+            }, 300);
         }
 
-        updateStats();
+        // Run stats when the page loads
+        window.onload = updateStats;
     </script>
 </body>
 </html>
