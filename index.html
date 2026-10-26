@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+i<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,7 +49,6 @@
             transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Apple Blurred Header */
         .header {
             position: fixed;
             top: 0;
@@ -86,7 +85,6 @@
 
         .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
 
-        /* Premium Spacing */
         .container {
             width: 100%;
             max-width: 820px;
@@ -96,7 +94,6 @@
             gap: 24px;
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             margin-bottom: 30px;
@@ -128,7 +125,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* Premium Cards */
         .card {
             background: var(--bg-card);
             border-radius: 28px;
@@ -196,7 +192,6 @@
 
         .btn:active { transform: scale(0.95); }
 
-        /* Progress Bars */
         .progress-wrapper { margin-top: 15px; }
         .progress-labels {
             display: flex;
@@ -221,16 +216,13 @@
         }
         .progress-fill.blue { background: var(--accent); }
         .progress-fill.green { background: var(--success); }
-        .progress-fill.orange { background: #ff9f0a; }
 
-        /* Habit Tracker */
         .habit-box {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(128, 128, 128, 0.06); padding: 20px; border-radius: 20px; margin-top: 12px;
         }
         .streak-flame { font-size: 1.6rem; margin-right: 12px; }
 
-        /* Input Row */
         .input-row { display: flex; gap: 12px; margin-top: 12px; }
         .input-row input {
             flex: 1; min-width: 0;
@@ -257,7 +249,6 @@
         .input-row button:hover { opacity: 0.9; transform: scale(1.02); }
         .input-row button:active { transform: scale(0.98); }
 
-        /* Task List */
         #bucket-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
         #bucket-list li {
             display: flex; justify-content: space-between; align-items: center;
@@ -274,7 +265,6 @@
         .btn-complete { color: var(--success); }
         .btn-delete { color: var(--danger); }
 
-        /* NEW: Sunrise / Sunset Widget */
         .sun-track {
             position: relative;
             width: 100%;
@@ -340,7 +330,6 @@
             <div class="mono-value" id="birthday-countdown">Calculating...</div>
         </div>
 
-        <!-- NEW: Time Left Today & Sunrise/Sunset -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">Time Left Today</div>
@@ -417,7 +406,6 @@
         function updateDashboard() {
             const now = new Date();
             
-            // DYNAMIC GREETING
             const hour = now.getHours();
             let greeting = "Hello, Sachin.";
             if (hour < 12) greeting = "Good Morning, Sachin.";
@@ -425,10 +413,8 @@
             else greeting = "Good Evening, Sachin.";
             document.getElementById('greeting').innerText = greeting;
 
-            // CLOCK
             document.getElementById('live-clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            // AGE CALCULATIONS
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
@@ -442,7 +428,6 @@
 
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
-            // PROGRESS BARS
             const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('life-progress-fill').style.width = lifePercent + "%";
             document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
@@ -453,7 +438,6 @@
             document.getElementById('day-progress-fill').style.width = dayPercent + "%";
             document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
 
-            // BIRTHDAY
             let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
             if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
             const diff = nextBirthday - now;
@@ -463,31 +447,24 @@
             const secs = Math.floor((diff / 1000) % 60);
             document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
 
-            // --- NEW: TIME LEFT TODAY ---
+            // TIME LEFT TODAY
             const msLeft = endOfDay - now;
             const hoursLeft = Math.floor((msLeft / (1000 * 60 * 60)) % 24);
             const minsLeft = Math.floor((msLeft / (1000 * 60)) % 60);
             const secsLeft = Math.floor((msLeft / 1000) % 60);
-            
-            // Format to look like a digital clock (HH:MM:SS)
             const hStr = String(hoursLeft).padStart(2, '0');
             const mStr = String(minsLeft).padStart(2, '0');
             const sStr = String(secsLeft).padStart(2, '0');
             document.getElementById('time-left-today').innerText = `${hStr}:${mStr}:${sStr}`;
 
-            // --- NEW: SUNRISE / SUNSET TRACKER ---
-            // Assuming Sunrise 6:00 AM (6) and Sunset 6:00 PM (18)
+            // SUNRISE / SUNSET
             const currentHour = now.getHours() + (now.getMinutes() / 60);
             const sunDot = document.getElementById('sun-dot');
-            
             let sunPercent = ((currentHour - 6) / 12) * 100;
-            // Clamp between 0% and 100% so it stays on the line
             if (sunPercent < 0) sunPercent = 0;
             if (sunPercent > 100) sunPercent = 100;
-            
             sunDot.style.left = `${sunPercent}%`;
 
-            // Dim the sun at night
             if (currentHour < 6 || currentHour > 18) {
                 sunDot.style.background = '#555';
                 sunDot.style.boxShadow = 'none';
@@ -543,4 +520,27 @@
         taskInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTask(); });
 
         // HABIT TRACKER
-        let streakData = JSON.parse(localStorage.getItem('sachinHabit
+        let streakData = JSON.parse(localStorage.getItem('sachinHabit')) || { streak: 0, lastDate: null };
+        
+        function updateStreakUI() {
+            document.getElementById('streak-count').innerText = streakData.streak;
+        }
+
+        function logHabit() {
+            const today = new Date().toDateString();
+            if (streakData.lastDate === today) {
+                alert("You already logged your habit for today! Come back tomorrow.");
+                return;
+            }
+            
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (streakData.lastDate === yesterday.toDateString()) {
+                streakData.streak++;
+            } else {
+                streakData.streak = 1; 
+            }
+            
+            streakData.lastDate = today;
+            localStorage.se
