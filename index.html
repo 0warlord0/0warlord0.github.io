@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sachin | Life Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap');
 
         * {
             margin: 0;
@@ -26,7 +26,6 @@
             padding: 20px;
         }
 
-        /* Load Animation */
         .dashboard {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -56,20 +55,12 @@
         }
 
         .live-clock {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #94a3b8;
             margin-bottom: 30px;
             font-variant-numeric: tabular-nums;
-            /* Smooth pulse animation for the clock */
-            animation: pulse 2s infinite alternate;
         }
 
-        @keyframes pulse {
-            from { opacity: 0.7; }
-            to { opacity: 1; }
-        }
-
-        /* Hover & Tap Animations for Boxes */
         .stat-box {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 16px;
@@ -77,10 +68,9 @@
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            cursor: default;
         }
 
-        .stat-box:hover, .stat-box:active {
+        .stat-box:hover {
             transform: translateY(-5px);
             border-color: rgba(56, 189, 248, 0.4);
             box-shadow: 0 10px 20px rgba(56, 189, 248, 0.1);
@@ -94,11 +84,12 @@
             margin-bottom: 10px;
         }
 
+        /* Using a monospace font so the numbers don't jump around as they tick */
         .stat-value {
-            font-size: 1.8rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #f8fafc;
-            font-variant-numeric: tabular-nums;
         }
 
         .progress-container {
@@ -122,31 +113,14 @@
             overflow: hidden;
         }
 
-        /* Progress Bar Animation */
         .progress-bar-fill {
             height: 100%;
-            width: 0%; /* Starts at 0 for the animation */
+            width: 0%;
             background: linear-gradient(90deg, #38bdf8, #a855f7);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth slide-in */
+            transition: width 0.1s linear;
         }
-
-        /* Glowing animation on the bar */
-        .progress-bar-fill::after {
-            content: '';
-            display: block;
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shine 2s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
     </style>
 </head>
 <body>
@@ -157,12 +131,12 @@
 
         <div class="stat-box">
             <div class="stat-title">Current Exact Age</div>
-            <div class="stat-value" id="age-display">Calculating...</div>
+            <div class="stat-value" id="age-display">0</div>
         </div>
 
         <div class="stat-box">
             <div class="stat-title">Est. Years Remaining</div>
-            <div class="stat-value" id="remaining-display">Calculating...</div>
+            <div class="stat-value" id="remaining-display">0</div>
         </div>
 
         <div class="progress-container">
@@ -178,33 +152,39 @@
     </div>
 
     <script>
-        // Live Clock
-        function updateClock() {
+        // Set your exact birth date here (Year, Month - 1, Day). 
+        // Example: March 15, 1996 (Month is 3 - 1 = 2)
+        // Replace this with your actual birth date for 100% accuracy!
+        const birthDate = new Date(1996, 2, 15); 
+        
+        // Estimated total lifespan in years (adjust if you want to change the 80 year expectation)
+        const expectedLifespanYears = 80;
+
+        function updateDashboard() {
             const now = new Date();
+            
+            // 1. Update Clock
             document.getElementById('live-clock').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
 
-        // Age Calculations & Animations
-        function updateStats() {
-            const exactAge = 27.912006945791216;
-            const yearsLeft = 52.087993054208781;
+            // 2. Calculate Exact Age in Years (Live)
+            const msSinceBirth = now - birthDate;
+            const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
+            
+            // 3. Calculate Years Remaining (Live)
+            const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
 
-            document.getElementById('age-display').innerText = exactAge.toFixed(4) + " years";
-            document.getElementById('remaining-display').innerText = yearsLeft.toFixed(4) + " years";
+            // 4. Update the text on screen
+            document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(12);
+            document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(12);
 
-            const totalLife = exactAge + yearsLeft;
-            const progressPercent = (exactAge / totalLife) * 100;
-
-            // Wait a tiny bit for the page to load, then trigger the progress bar animation
-            setTimeout(() => {
-                document.getElementById('progress-fill').style.width = progressPercent + "%";
-            }, 300);
+            // 5. Update the progress bar smoothly
+            const progressPercent = (yearsSinceBirth / expectedLifespanYears) * 100;
+            document.getElementById('progress-fill').style.width = progressPercent + "%";
         }
 
-        // Run stats when the page loads
-        window.onload = updateStats;
+        // Run the function immediately, then update every 50 milliseconds for a "running" effect
+        updateDashboard();
+        setInterval(updateDashboard, 50); 
     </script>
 </body>
 </html>
