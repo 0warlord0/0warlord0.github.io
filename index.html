@@ -54,11 +54,35 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .live-clock {
-            font-size: 1.1rem;
-            color: #94a3b8;
+        /* Small green dot showing the system is live */
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #22c55e;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .live-clock {
+            font-size: 0.9rem;
+            color: #94a3b8;
             font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
         }
 
         .stat-box {
@@ -84,7 +108,6 @@
             margin-bottom: 10px;
         }
 
-        /* Using a monospace font so the numbers don't jump around as they tick */
         .stat-value {
             font-family: 'Space Mono', monospace;
             font-size: 1.5rem;
@@ -126,8 +149,12 @@
 <body>
 
     <div class="dashboard">
-        <h1>Sachin's Life Dashboard</h1>
-        <div class="live-clock" id="live-clock">Loading time...</div>
+        <h1>Sachin's Life Dashboard</h1> 
+        
+        <div class="status-container">
+            <div class="status-dot"></div>
+            <div class="live-clock" id="live-clock">Syncing...</div>
+        </div>
 
         <div class="stat-box">
             <div class="stat-title">Current Exact Age</div>
@@ -152,37 +179,28 @@
     </div>
 
     <script>
-        // Set your exact birth date here (Year, Month - 1, Day). 
-        // Example: March 15, 1996 (Month is 3 - 1 = 2)
-        // Replace this with your actual birth date for 100% accuracy!
-        const birthDate = new Date(1996, 2, 15); 
+        // Exact DOB: November 27, 1998 at 8:15 PM
+        // Note: Months in JavaScript start at 0 (so 10 = November)
+        const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
         
-        // Estimated total lifespan in years (adjust if you want to change the 80 year expectation)
         const expectedLifespanYears = 80;
 
         function updateDashboard() {
             const now = new Date();
-            
-            // 1. Update Clock
             document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
-            // 2. Calculate Exact Age in Years (Live)
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
-            
-            // 3. Calculate Years Remaining (Live)
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
 
-            // 4. Update the text on screen
             document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(12);
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(12);
 
-            // 5. Update the progress bar smoothly
             const progressPercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('progress-fill').style.width = progressPercent + "%";
         }
 
-        // Run the function immediately, then update every 50 milliseconds for a "running" effect
+        // Run immediately, then run every 50ms for the ticking effect
         updateDashboard();
         setInterval(updateDashboard, 50); 
     </script>
