@@ -47,8 +47,33 @@
             justify-content: flex-start;
             overflow-x: hidden;
             transition: background-color 0.8s ease, color 0.8s ease;
+            position: relative;
         }
 
+        /* 3. Dynamic Focus Glow (Background) */
+        .focus-glow {
+            position: fixed;
+            top: -20vh;
+            left: -20vw;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(41, 151, 255, 0.08) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
+            animation: drift 20s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        body.light-mode .focus-glow {
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.08) 0%, transparent 70%);
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10vw, 10vh) scale(1.2); }
+        }
+
+        /* Apple Blurred Header */
         .header {
             position: fixed;
             top: 0;
@@ -74,29 +99,45 @@
             letter-spacing: -0.01em;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 2. Glanceable Weather */
+        .weather {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* 4. Haptic Theme Toggle */
         .theme-toggle {
             background: none;
             border: none;
             color: var(--text-main);
             font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .theme-toggle:hover { transform: scale(1.1); }
+        .theme-toggle:hover { transform: scale(1.1) rotate(180deg); }
 
+        /* Main Container */
         .container {
             width: 100%;
             max-width: 800px;
-            padding: 120px 20px 80px 20px;
+            padding: 100px 20px 80px 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
+        /* Hero Section */
         .hero {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             opacity: 0;
             transform: translateY(30px);
             animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -107,7 +148,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 7vw, 4.5rem);
+            font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
             letter-spacing: -0.04em;
             line-height: 1.05;
@@ -118,12 +159,13 @@
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 400;
             color: var(--text-muted);
             font-variant-numeric: tabular-nums;
         }
 
+        /* Cards */
         .card {
             background: var(--bg-card);
             border-radius: 24px;
@@ -185,6 +227,7 @@
 
         .btn:hover { background: rgba(128, 128, 128, 0.3); }
 
+        /* Progress Bars */
         .progress-wrapper { margin-top: 15px; }
         .progress-labels {
             display: flex;
@@ -210,12 +253,14 @@
         .progress-fill.blue { background: var(--accent); }
         .progress-fill.green { background: var(--success); }
 
+        /* Habit Tracker */
         .habit-box {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(128, 128, 128, 0.1); padding: 20px; border-radius: 16px; margin-top: 10px;
         }
         .streak-flame { font-size: 1.5rem; margin-right: 10px; }
 
+        /* Bucket List Input */
         .input-row { display: flex; gap: 10px; margin-top: 10px; }
         .input-row input {
             flex: 1; min-width: 0;
@@ -236,6 +281,7 @@
         }
         .input-row button:hover { opacity: 0.8; }
 
+        /* Task List */
         #bucket-list { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
         #bucket-list li {
             display: flex; justify-content: space-between; align-items: center;
@@ -248,18 +294,84 @@
         .btn-complete { color: var(--success); }
         .btn-delete { color: var(--danger); }
 
+        /* 5. Apple Watch Progress Ring Layout */
+        .bucket-layout {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .bucket-layout { flex-direction: column; text-align: center; }
+        }
+
+        .ring-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .ring-svg {
+            transform: rotate(-90deg);
+            width: 100px;
+            height: 100px;
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: rgba(128, 128, 128, 0.2);
+            stroke-width: 8;
+        }
+
+        .ring-fill {
+            fill: none;
+            stroke: var(--success);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2; /* 2 * pi * r (r=40) */
+            stroke-dashoffset: 251.2; /* Start empty */
+            transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .bucket-info {
+            flex: 1;
+        }
+
+        .bucket-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
     </style>
 </head>
 <body>
 
+    <!-- 3. Dynamic Focus Glow -->
+    <div class="focus-glow"></div>
+
     <div class="header">
         <div class="header-title">Sachin</div>
-        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
+        <div class="header-right">
+            <!-- 2. Glanceable Weather -->
+            <div class="weather" id="weather">☀️ 28°</div>
+            <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
+        </div>
     </div>
 
     <div class="container">
         <div class="hero">
-            <!-- Added ID here to update dynamically -->
             <h1 id="greeting">Hello, Sachin.</h1>
             <p id="live-clock">Syncing...</p>
         </div>
@@ -322,14 +434,29 @@
             </div>
         </div>
 
+        <!-- BUCKET LIST WITH APPLE WATCH RING -->
         <div class="card reveal">
             <div class="card-header">
                 <div class="card-title">Bucket List</div>
             </div>
-            <div class="input-row">
-                <input type="text" id="task-input" placeholder="Add a life goal..." maxlength="40">
-                <button onclick="addTask()">Add</button>
+            
+            <div class="bucket-layout">
+                <div class="ring-container">
+                    <svg class="ring-svg">
+                        <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+                        <circle class="ring-fill" id="bucket-ring" cx="50" cy="50" r="40"></circle>
+                    </svg>
+                    <div class="ring-text" id="ring-text">0%</div>
+                </div>
+                <div class="bucket-info">
+                    <p>Track your life goals and watch the ring close.</p>
+                    <div class="input-row">
+                        <input type="text" id="task-input" placeholder="Add a goal..." maxlength="40">
+                        <button onclick="addTask()">Add</button>
+                    </div>
+                </div>
             </div>
+
             <ul id="bucket-list"></ul>
         </div>
         
@@ -357,7 +484,6 @@
         function updateDashboard() {
             const now = new Date();
             
-            // --- DYNAMIC GREETING (Updates automatically) ---
             const hour = now.getHours();
             let greeting = "Hello, Sachin.";
             if (hour < 12) greeting = "Good Morning, Sachin.";
@@ -365,10 +491,8 @@
             else greeting = "Good Evening, Sachin.";
             document.getElementById('greeting').innerText = greeting;
 
-            // --- CLOCK ---
             document.getElementById('live-clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            // --- AGE CALCULATIONS ---
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
@@ -382,7 +506,6 @@
 
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
-            // --- PROGRESS BARS ---
             const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('life-progress-fill').style.width = lifePercent + "%";
             document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
@@ -393,7 +516,6 @@
             document.getElementById('day-progress-fill').style.width = dayPercent + "%";
             document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
 
-            // --- BIRTHDAY ---
             let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
             if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
             const diff = nextBirthday - now;
@@ -404,14 +526,19 @@
             document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
 
-        // --- BUCKET LIST LOGIC ---
+        // --- BUCKET LIST & APPLE WATCH RING ---
         const taskInput = document.getElementById('task-input');
         const bucketList = document.getElementById('bucket-list');
+        const ringFill = document.getElementById('bucket-ring');
+        const ringText = document.getElementById('ring-text');
+        const ringCircumference = 251.2; // 2 * pi * 40
+
         let tasks = JSON.parse(localStorage.getItem('sachinTasks')) || [];
 
         function saveTasks() {
             localStorage.setItem('sachinTasks', JSON.stringify(tasks));
             renderTasks();
+            updateRing();
         }
 
         function addTask() {
@@ -441,51 +568,4 @@
                     <span style="font-weight: 500;">${task.text}</span>
                     <div class="task-actions">
                         <button class="btn-complete" onclick="toggleTask(${task.id})">✔</button>
-                        <button class="btn-delete" onclick="deleteTask(${task.id})">✖</button>
-                    </div>
-                `;
-                bucketList.appendChild(li);
-            });
-        }
-        taskInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTask(); });
-
-        // --- HABIT TRACKER ---
-        let streakData = JSON.parse(localStorage.getItem('sachinHabit')) || { streak: 0, lastDate: null };
-        
-        function updateStreakUI() {
-            document.getElementById('streak-count').innerText = streakData.streak;
-        }
-
-        function logHabit() {
-            const today = new Date().toDateString();
-            if (streakData.lastDate === today) {
-                alert("You already logged your habit for today! Come back tomorrow.");
-                return;
-            }
-            
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            if (streakData.lastDate === yesterday.toDateString()) {
-                streakData.streak++;
-            } else {
-                streakData.streak = 1; 
-            }
-            
-            streakData.lastDate = today;
-            localStorage.setItem('sachinHabit', JSON.stringify(streakData));
-            updateStreakUI();
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            document.getElementById('theme-btn').innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        }
-
-        renderTasks();
-        updateStreakUI();
-        updateDashboard();
-        setInterval(updateDashboard, 1000); 
-    </script>
-</body>
-</html>
+                        <button class="btn-delete
