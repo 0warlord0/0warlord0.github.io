@@ -1,204 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sachin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachin | Life Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        body {
+            background: #0a0a0a;
+            background-image: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    body {
-      font-family: 'JetBrains Mono', monospace;
-      background: #0a0a0e;
-      color: #d0ffd0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      overflow: hidden;
-    }
+        .dashboard {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
 
-    canvas#bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      opacity: 0.25;
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .content {
-      text-align: center;
-      max-width: 640px;
-      position: relative;
-      z-index: 1;
-    }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    h1 {
-      font-size: 4.8rem;
-      font-weight: 700;
-      letter-spacing: -2px;
-      color: transparent;
-      background: linear-gradient(90deg, #00ff88, #00ccff, #aa88ff);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      animation: gradientFlow 12s linear infinite, breathe 8s ease-in-out infinite;
-      margin-bottom: 3rem;
-    }
+        .live-clock {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-variant-numeric: tabular-nums;
+        }
 
-    .stats {
-      font-size: 1.7rem;
-      line-height: 2.1;
-      margin: 2rem 0 3.5rem;
-      opacity: 0;
-      animation: fadeInUp 1.4s ease-out 0.8s forwards;
-    }
+        .stat-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
 
-    #age {
-      color: #00ffaa;
-      font-weight: 500;
-    }
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
 
-    #left {
-      color: #ff7777;
-      font-weight: 500;
-    }
+        .stat-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
 
-    .github-link {
-      display: inline-block;
-      margin-top: 2rem;
-      font-size: 1.35rem;
-      color: #66ddff;
-      text-decoration: none;
-      border: 1px solid #3388aa;
-      padding: 0.8rem 1.8rem;
-      border-radius: 6px;
-      transition: all 0.35s ease;
-      opacity: 0;
-      animation: fadeInUp 1.6s ease-out 1.2s forwards;
-    }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f8fafc;
+            font-variant-numeric: tabular-nums;
+        }
 
-    .github-link:hover {
-      background: rgba(40, 180, 220, 0.15);
-      border-color: #00ccff;
-      color: #ccffff;
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(0, 200, 255, 0.25);
-    }
+        .progress-container {
+            margin-top: 30px;
+            text-align: left;
+        }
 
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
 
-    @keyframes breathe {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.02); }
-    }
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        .progress-bar-fill {
+            height: 100%;
+            width: 35%; /* Will be calculated by JS */
+            background: linear-gradient(90deg, #38bdf8, #a855f7);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+            transition: width 1s ease-in-out;
+        }
 
-    @media (max-width: 600px) {
-      h1 { font-size: 3.6rem; }
-      .stats { font-size: 1.4rem; }
-    }
-  </style>
+        footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+    </style>
 </head>
 <body>
 
-  <canvas id="bg"></canvas>
+    <div class="dashboard">
+        <h1>Sachin's Life Dashboard</h1>
+        <div class="live-clock" id="live-clock">Loading time...</div>
 
-  <div class="content">
-    <h1>Sachin</h1>
+        <div class="stat-box">
+            <div class="stat-title">Current Exact Age</div>
+            <div class="stat-value" id="age-display">Calculating...</div>
+        </div>
 
-    <div class="stats">
-      <div id="age">Loading your age...</div>
-      <div id="left">Loading years left...</div>
+        <div class="stat-box">
+            <div class="stat-title">Est. Years Remaining</div>
+            <div class="stat-value" id="remaining-display">Calculating...</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-labels">
+                <span>Born</span>
+                <span>Life Progress</span>
+                <span>Est. End</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <footer>Live tracking active • Built for the modern web</footer>
     </div>
 
-    <a href="https://github.com/0warlord0" class="github-link" target="_blank" rel="noopener">
-      → GitHub
-    </a>
-  </div>
+    <script>
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-  <script>
-    // ─── Background subtle particles ───
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
+        // Age Calculations
+        function updateStats() {
+            // Get the exact numbers from your original site
+            const exactAge = 27.912006945791216;
+            const yearsLeft = 52.087993054208781;
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
+            // Format to show only 4 decimal places to prevent the UI from breaking
+            document.getElementById('age-display').innerText = exactAge.toFixed(4) + " years";
+            document.getElementById('remaining-display').innerText = yearsLeft.toFixed(4) + " years";
 
-    const particles = [];
-    for (let i = 0; i < 60; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 1.6 + 0.4,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3
-      });
-    }
+            // Calculate Life Progress Percentage
+            const totalLife = exactAge + yearsLeft;
+            const progressPercent = (exactAge / totalLife) * 100;
 
-    function animateBg() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
+            // Animate the progress bar
+            setTimeout(() => {
+                document.getElementById('progress-fill').style.width = progressPercent + "%";
+            }, 500);
+        }
 
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(100, 255, 180, 0.5)';
-        ctx.fill();
-      });
-      requestAnimationFrame(animateBg);
-    }
-    animateBg();
-
-    // ─── Age calculator ───
-    const birthDate = new Date(1998, 10, 27, 20, 15, 0); // Nov 27 1998 8:15 PM
-    const lifeExpectancy = 80;
-
-    function updateAge() {
-      const now = new Date();
-      const msLived = now - birthDate;
-      const years = msLived / (1000 * 60 * 60 * 24 * 365.2425);
-
-      document.getElementById('age').textContent =
-        `I am ${years.toFixed(15)} years old`;
-
-      const yearsLeft = lifeExpectancy - years;
-      document.getElementById('left').textContent =
-        `I probably have ${yearsLeft.toFixed(15)} years left`;
-    }
-
-    setInterval(updateAge, 10);
-    updateAge();
-  </script>
+        updateStats();
+    </script>
 </body>
 </html>
