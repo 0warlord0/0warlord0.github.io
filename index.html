@@ -48,7 +48,7 @@
             align-items: center;
             overflow-x: hidden;
             transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
-            cursor: none; /* Hide default cursor for custom cursor */
+            cursor: none; 
         }
 
         /* Custom Glowing Cursor */
@@ -169,22 +169,18 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            opacity: 0;
-            transform: translateY(40px);
         }
 
-        .card.visible { opacity: 1; transform: translateY(0); }
         .card:hover { background: var(--bg-card-hover); }
 
         /* Grid Spanning */
         .card-large { grid-column: span 4; }
         .card-medium { grid-column: span 2; }
-        .card-small { grid-column: span 1; }
 
         @media (max-width: 768px) {
             .bento-grid { grid-template-columns: 1fr; }
-            .card-large, .card-medium, .card-small { grid-column: span 1; }
-            body { cursor: auto; } /* Disable custom cursor on mobile */
+            .card-large, .card-medium { grid-column: span 1; }
+            body { cursor: auto; }
             .cursor { display: none; }
         }
 
@@ -365,14 +361,14 @@
         <!-- Hero Section -->
         <div>
             <h1 class="hero-title" id="greeting">Hello, Sachin.</h1>
-            <p class="hero-subtitle" id="live-clock">Syncing...</p>
+            <p class="hero-subtitle" id="live-clock">Loading time...</p>
         </div>
 
         <!-- BENTO GRID -->
         <div class="bento-grid">
             
             <!-- Age Stats -->
-            <div class="card card-medium reveal">
+            <div class="card card-medium">
                 <div class="card-title">
                     Current Age 
                     <button class="btn" onclick="toggleAgeFormat()">Switch</button>
@@ -380,25 +376,25 @@
                 <div class="mono-value" id="age-display">0</div>
             </div>
 
-            <div class="card card-medium reveal">
+            <div class="card card-medium">
                 <div class="card-title">Years Remaining</div>
                 <div class="mono-value" id="remaining-display">0</div>
             </div>
 
             <!-- Birthday Countdown -->
-            <div class="card card-large reveal">
+            <div class="card card-large">
                 <div class="card-title">Next Birthday (Nov 27)</div>
                 <div class="mono-value" id="birthday-countdown" style="color: var(--accent);">Calculating...</div>
             </div>
 
             <!-- "Now" Card -->
-            <div class="card card-medium reveal">
+            <div class="card card-medium">
                 <div class="card-title">Currently Focused On</div>
                 <div class="now-text">Learning Advanced JavaScript<br>& Building my Dashboard 🚀</div>
             </div>
 
             <!-- Habit Tracker -->
-            <div class="card card-medium reveal">
+            <div class="card card-medium">
                 <div class="card-title">Habit Streak</div>
                 <div class="habit-box">
                     <div>
@@ -410,7 +406,7 @@
             </div>
 
             <!-- Progress Bars -->
-            <div class="card card-large reveal">
+            <div class="card card-large">
                 <div class="progress-wrapper" style="margin-top: 0;">
                     <div class="progress-labels">
                         <span>Life Progress</span>
@@ -433,7 +429,7 @@
             </div>
 
             <!-- Bucket List -->
-            <div class="card card-large reveal" style="margin-bottom: 40px;">
+            <div class="card card-large" style="margin-bottom: 40px;">
                 <div class="card-title">Bucket List (Tap to flip)</div>
                 <div class="input-row">
                     <input type="text" id="task-input" placeholder="Add a life goal..." maxlength="30">
@@ -453,7 +449,6 @@
             cursor.style.top = e.clientY + 'px';
         });
 
-        // Add hover effect for cursor
         const hoverElements = document.querySelectorAll('a, button, .flip-card, input');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
@@ -467,17 +462,7 @@
             document.getElementById('scroll-progress').style.width = progress + '%';
         });
 
-        // --- 2. SCROLL ANIMATIONS ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-
-        // --- 3. DYNAMIC GREETING ---
+        // --- 2. DYNAMIC GREETING ---
         const hour = new Date().getHours();
         let greeting = "Hello, Sachin.";
         if (hour < 12) greeting = "Good Morning, Sachin.";
@@ -485,7 +470,7 @@
         else greeting = "Good Evening, Sachin.";
         document.getElementById('greeting').innerText = greeting;
 
-        // --- 4. CALCULATIONS & AGE FORMAT ---
+        // --- 3. CALCULATIONS & AGE FORMAT ---
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
         const expectedLifespanYears = 80;
         let showSeconds = false;
@@ -534,7 +519,7 @@
             document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
 
-        // --- 5. BUCKET LIST (3D FLIP CARDS) ---
+        // --- 4. BUCKET LIST (3D FLIP CARDS) ---
         const taskInput = document.getElementById('task-input');
         const bucketList = document.getElementById('bucket-list');
         let tasks = JSON.parse(localStorage.getItem('sachinTasks')) || [];
@@ -557,4 +542,19 @@
             saveTasks();
         }
 
-        function dele
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+        }
+
+        function renderTasks() {
+            bucketList.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `flip-card ${task.completed ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <div class="flip-card-inner" onclick="toggleTask(${task.id})">
+                        <div class="flip-card-front">
+                            <span class="task-text">${task.text}</span>
+                            <div class="task-actions">
+                                <button class="btn-delete" onclick="event.stopPropagation(); deleteTa
