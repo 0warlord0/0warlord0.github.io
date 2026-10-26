@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sachin | Dashboard</title>
     <style>
-        /* Apple uses San Francisco, we use Inter which is the closest free match */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono&display=swap');
 
         * {
@@ -28,7 +27,6 @@
             --border: rgba(255, 255, 255, 0.08);
         }
 
-        /* Light mode for daytime */
         body.light-mode {
             --bg-main: #fbfbfd;
             --bg-card: #ffffff;
@@ -51,7 +49,6 @@
             transition: background-color 0.8s ease, color 0.8s ease;
         }
 
-        /* Apple-style Blurred Header */
         .header {
             position: fixed;
             top: 0;
@@ -88,7 +85,6 @@
 
         .theme-toggle:hover { transform: scale(1.1); }
 
-        /* Main Container */
         .container {
             width: 100%;
             max-width: 800px;
@@ -98,11 +94,9 @@
             gap: 20px;
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             margin-bottom: 40px;
-            /* Smooth entry animation */
             opacity: 0;
             transform: translateY(30px);
             animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -130,7 +124,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* Cards (Deep Gray, No Borders) */
         .card {
             background: var(--bg-card);
             border-radius: 24px;
@@ -166,7 +159,6 @@
             color: var(--text-muted);
         }
 
-        /* Huge Apple-style Numbers */
         .mono-value {
             font-family: 'Space Mono', monospace;
             font-size: clamp(1.8rem, 5vw, 2.8rem);
@@ -176,11 +168,9 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
-        /* Grids */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        /* Apple-style Pill Buttons */
         .btn {
             background: rgba(128, 128, 128, 0.2);
             color: var(--text-main);
@@ -195,7 +185,6 @@
 
         .btn:hover { background: rgba(128, 128, 128, 0.3); }
 
-        /* Progress Bars */
         .progress-wrapper { margin-top: 15px; }
         .progress-labels {
             display: flex;
@@ -221,14 +210,12 @@
         .progress-fill.blue { background: var(--accent); }
         .progress-fill.green { background: var(--success); }
 
-        /* Habit Tracker */
         .habit-box {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(128, 128, 128, 0.1); padding: 20px; border-radius: 16px; margin-top: 10px;
         }
         .streak-flame { font-size: 1.5rem; margin-right: 10px; }
 
-        /* Bucket List Input */
         .input-row { display: flex; gap: 10px; margin-top: 10px; }
         .input-row input {
             flex: 1; min-width: 0;
@@ -249,7 +236,6 @@
         }
         .input-row button:hover { opacity: 0.8; }
 
-        /* Task List */
         #bucket-list { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
         #bucket-list li {
             display: flex; justify-content: space-between; align-items: center;
@@ -272,13 +258,12 @@
     </div>
 
     <div class="container">
-        <!-- Hero Section -->
         <div class="hero">
+            <!-- Added ID here to update dynamically -->
             <h1 id="greeting">Hello, Sachin.</h1>
             <p id="live-clock">Syncing...</p>
         </div>
 
-        <!-- Age Stats -->
         <div class="grid-2">
             <div class="card reveal">
                 <div class="card-header">
@@ -295,7 +280,6 @@
             </div>
         </div>
 
-        <!-- Countdown -->
         <div class="card reveal">
             <div class="card-header">
                 <div class="card-title">Next Birthday</div>
@@ -303,7 +287,6 @@
             <div class="mono-value" id="birthday-countdown">Calculating...</div>
         </div>
 
-        <!-- Progress Bars -->
         <div class="card reveal">
             <div class="progress-wrapper" style="margin-top: 0;">
                 <div class="progress-labels">
@@ -326,7 +309,6 @@
             </div>
         </div>
 
-        <!-- Habit Tracker -->
         <div class="card reveal">
             <div class="card-header">
                 <div class="card-title">Daily Habit Streak</div>
@@ -340,7 +322,6 @@
             </div>
         </div>
 
-        <!-- Bucket List -->
         <div class="card reveal">
             <div class="card-header">
                 <div class="card-title">Bucket List</div>
@@ -355,7 +336,6 @@
     </div>
 
     <script>
-        // --- 1. SCROLL ANIMATIONS (Apple Style Fade Up) ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
@@ -365,15 +345,6 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        // --- 2. DYNAMIC GREETING ---
-        const hour = new Date().getHours();
-        let greeting = "Hello, Sachin.";
-        if (hour < 12) greeting = "Good Morning, Sachin.";
-        else if (hour < 18) greeting = "Good Afternoon, Sachin.";
-        else greeting = "Good Evening, Sachin.";
-        document.getElementById('greeting').innerText = greeting;
-
-        // --- 3. CALCULATIONS ---
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
         const expectedLifespanYears = 80;
         let showSeconds = false;
@@ -385,8 +356,19 @@
 
         function updateDashboard() {
             const now = new Date();
+            
+            // --- DYNAMIC GREETING (Updates automatically) ---
+            const hour = now.getHours();
+            let greeting = "Hello, Sachin.";
+            if (hour < 12) greeting = "Good Morning, Sachin.";
+            else if (hour < 18) greeting = "Good Afternoon, Sachin.";
+            else greeting = "Good Evening, Sachin.";
+            document.getElementById('greeting').innerText = greeting;
+
+            // --- CLOCK ---
             document.getElementById('live-clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+            // --- AGE CALCULATIONS ---
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
@@ -400,6 +382,7 @@
 
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
+            // --- PROGRESS BARS ---
             const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('life-progress-fill').style.width = lifePercent + "%";
             document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
@@ -410,6 +393,7 @@
             document.getElementById('day-progress-fill').style.width = dayPercent + "%";
             document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
 
+            // --- BIRTHDAY ---
             let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
             if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
             const diff = nextBirthday - now;
@@ -420,7 +404,7 @@
             document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
 
-        // --- 4. BUCKET LIST LOGIC ---
+        // --- BUCKET LIST LOGIC ---
         const taskInput = document.getElementById('task-input');
         const bucketList = document.getElementById('bucket-list');
         let tasks = JSON.parse(localStorage.getItem('sachinTasks')) || [];
@@ -465,7 +449,7 @@
         }
         taskInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTask(); });
 
-        // --- 5. HABIT TRACKER ---
+        // --- HABIT TRACKER ---
         let streakData = JSON.parse(localStorage.getItem('sachinHabit')) || { streak: 0, lastDate: null };
         
         function updateStreakUI() {
@@ -493,13 +477,11 @@
             updateStreakUI();
         }
 
-        // Theme Toggle
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             document.getElementById('theme-btn').innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
         }
 
-        // Initialize
         renderTasks();
         updateStreakUI();
         updateDashboard();
