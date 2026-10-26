@@ -14,30 +14,61 @@
             font-family: 'Outfit', sans-serif;
         }
 
+        /* Dark Mode (Default) */
+        :root {
+            --bg-color: #0a0a0a;
+            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
+                           radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --box-bg: rgba(0, 0, 0, 0.4);
+            --box-border: rgba(255, 255, 255, 0.05);
+            --accent: #38bdf8;
+            --accent-2: #a855f7;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --bg-color: #f8fafc;
+            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.2), transparent 30%),
+                           radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.2), transparent 30%);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --box-bg: rgba(255, 255, 255, 0.9);
+            --box-border: rgba(0, 0, 0, 0.05);
+            --accent: #0284c7;
+            --accent-2: #9333ea;
+        }
+
         body {
-            background: #0a0a0a;
-            background-image: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
-                              radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%);
-            color: #ffffff;
+            background-color: var(--bg-color);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         .dashboard {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 24px;
-            padding: 40px;
+            padding: 30px;
             width: 100%;
-            max-width: 600px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 650px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             text-align: center;
             animation: fadeIn 1s ease-out;
+            transition: background 0.4s ease, border 0.4s ease;
         }
 
         @keyframes fadeIn {
@@ -45,22 +76,42 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #38bdf8, #a855f7);
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Small green dot showing the system is live */
+        .theme-toggle {
+            background: var(--box-bg);
+            border: 1px solid var(--box-border);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
         .status-container {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .status-dot {
@@ -80,58 +131,83 @@
 
         .live-clock {
             font-size: 0.9rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             font-variant-numeric: tabular-nums;
             letter-spacing: 1px;
         }
 
+        /* Main Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 500px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
         .stat-box {
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--box-bg);
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            padding: 15px;
+            border: 1px solid var(--box-border);
+            transition: transform 0.3s ease;
         }
 
         .stat-box:hover {
-            transform: translateY(-5px);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.1);
+            transform: translateY(-3px);
         }
 
         .stat-title {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #94a3b8;
-            margin-bottom: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
         .stat-value {
             font-family: 'Space Mono', monospace;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #f8fafc;
         }
 
+        /* Countdown Box */
+        .countdown-box {
+            background: var(--box-bg);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid var(--box-border);
+            margin-bottom: 20px;
+        }
+
+        .countdown-timer {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        /* Progress Bars */
         .progress-container {
-            margin-top: 30px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
         .progress-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 10px;
+            background: var(--box-border);
             border-radius: 10px;
             overflow: hidden;
         }
@@ -139,70 +215,225 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #38bdf8, #a855f7);
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
             transition: width 0.1s linear;
         }
+
+        /* Life in Weeks Grid */
+        .weeks-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        .week-dot {
+            width: 5px;
+            height: 5px;
+            background-color: var(--box-border);
+            border-radius: 1px;
+        }
+        .week-dot.lived {
+            background-color: var(--accent);
+            box-shadow: 0 0 3px var(--accent);
+        }
+
+        /* Quote */
+        .quote-box {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        /* Social Links */
+        .socials {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .socials a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border-bottom: 1px solid transparent;
+        }
+
+        .socials a:hover {
+            color: var(--accent);
+            border-bottom: 1px solid var(--accent);
+        }
+
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-        <h1>Sachin's Life Dashboard</h1> 
+        <div class="top-bar">
+            <h1>Sachin's Dashboard</h1>
+            <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
+        </div>
         
         <div class="status-container">
             <div class="status-dot"></div>
             <div class="live-clock" id="live-clock">Syncing...</div>
         </div>
 
-        <div class="stat-box">
-            <div class="stat-title">Current Exact Age</div>
-            <div class="stat-value" id="age-display">0</div>
+        <!-- Main Age Stats -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-title">Exact Age</div>
+                <div class="stat-value" id="age-display">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Years Remaining</div>
+                <div class="stat-value" id="remaining-display">0</div>
+            </div>
         </div>
 
-        <div class="stat-box">
-            <div class="stat-title">Est. Years Remaining</div>
-            <div class="stat-value" id="remaining-display">0</div>
+        <!-- Next Birthday Countdown -->
+        <div class="countdown-box">
+            <div class="stat-title">Countdown to Birthday (Nov 27)</div>
+            <div class="countdown-timer" id="birthday-countdown">Calculating...</div>
         </div>
 
+        <!-- Life Progress Bar -->
         <div class="progress-container">
             <div class="progress-labels">
-                <span>Born</span>
                 <span>Life Progress</span>
-                <span>Est. End</span>
+                <span id="life-percent">0%</span>
             </div>
             <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progress-fill"></div>
+                <div class="progress-bar-fill" id="life-progress-fill"></div>
             </div>
+        </div>
+
+        <!-- Today Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-labels">
+                <span>Today's Progress</span>
+                <span id="day-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="day-progress-fill" style="background: linear-gradient(90deg, #22c55e, #eab308);"></div>
+            </div>
+        </div>
+
+        <!-- Life in Weeks -->
+        <div style="margin-top: 25px;">
+            <div class="stat-title" style="text-align: left;">Life in Weeks (80 Years)</div>
+            <div class="weeks-grid" id="weeks-grid"></div>
+        </div>
+
+        <!-- Quote -->
+        <div class="quote-box" id="daily-quote"></div>
+
+        <!-- Socials -->
+        <div class="socials">
+            <a href="https://github.com/0warlord0" target="_blank">GitHub</a>
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">LinkedIn</a>
         </div>
     </div>
 
     <script>
-        // Exact DOB: November 27, 1998 at 8:15 PM
-        // Note: Months in JavaScript start at 0 (so 10 = November)
+        // DOB: Nov 27, 1998, 8:15 PM
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
-        
         const expectedLifespanYears = 80;
+        const totalWeeks = expectedLifespanYears * 52.1775; // Average weeks in a year
+
+        // 1. Generate the Weeks Grid once on load
+        const weeksGrid = document.getElementById('weeks-grid');
+        for (let i = 0; i < totalWeeks; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'week-dot';
+            weeksGrid.appendChild(dot);
+        }
+        const weekDots = document.querySelectorAll('.week-dot');
+
+        // 2. Daily Quotes Array
+        const quotes = [
+            "Time is the most valuable thing a man can spend.",
+            "The purpose of our lives is to be happy.",
+            "Life is what happens when you're busy making other plans.",
+            "Get busy living or get busy dying.",
+            "You only live once, but if you do it right, once is enough."
+        ];
 
         function updateDashboard() {
             const now = new Date();
+            
+            // Clock
             document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
+            // --- AGE & REMAINING ---
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
 
-            document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(12);
-            document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(12);
+            document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(8);
+            document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
-            const progressPercent = (yearsSinceBirth / expectedLifespanYears) * 100;
-            document.getElementById('progress-fill').style.width = progressPercent + "%";
+            // --- LIFE PROGRESS BAR ---
+            const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
+            document.getElementById('life-progress-fill').style.width = lifePercent + "%";
+            document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
+
+            // --- DAY PROGRESS BAR ---
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
+            const dayPercent = ((now - startOfDay) / (endOfDay - startOfDay)) * 100;
+            document.getElementById('day-progress-fill').style.width = dayPercent + "%";
+            document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
+
+            // --- BIRTHDAY COUNTDOWN ---
+            let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
+            if (now > nextBirthday) {
+                nextBirthday.setFullYear(now.getFullYear() + 1);
+            }
+            const diff = nextBirthday - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+            document.getElementById('birthday-countdown').innerText = 
+                `${days}d ${hours}h ${mins}m ${secs}s`;
+
+            // --- WEEKS GRID ---
+            const weeksLived = Math.floor(yearsSinceBirth * 52.1775);
+            weekDots.forEach((dot, index) => {
+                if (index < weeksLived) {
+                    dot.classList.add('lived');
+                } else {
+                    dot.classList.remove('lived');
+                }
+            });
         }
 
-        // Run immediately, then run every 50ms for the ticking effect
+        // Set daily quote based on the day of the year so it changes every day
+        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+        document.getElementById('daily-quote').innerText = `"${quotes[dayOfYear % quotes.length]}"`;
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const btn = document.getElementById('theme-btn');
+            if (document.body.classList.contains('light-mode')) {
+                btn.innerText = '☀️';
+            } else {
+                btn.innerText = '🌙';
+            }
+        }
+
+        // Run loop
         updateDashboard();
-        setInterval(updateDashboard, 50); 
+        setInterval(updateDashboard, 1000); // Update every second
     </script>
 </body>
 </html>
