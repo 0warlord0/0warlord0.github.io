@@ -36,7 +36,7 @@
             --text-muted: #515154;
             --accent: #0071e3;
             --accent-hover: #0077ed;
-            --border: rgba(0, 0, 0, 0.08);
+            --border: rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -48,26 +48,6 @@
             align-items: center;
             overflow-x: hidden;
             transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
-            cursor: none; 
-        }
-
-        /* Custom Glowing Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease, background 0.2s ease;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-        }
-
-        .cursor.hover {
-            transform: translate(-50%, -50%) scale(1.5);
-            background: rgba(41, 151, 255, 0.2);
         }
 
         /* Scroll Progress Bar */
@@ -117,21 +97,23 @@
             border: none;
             color: var(--text-main);
             font-size: 1.2rem;
-            cursor: none;
+            cursor: pointer;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
 
         /* Main Container */
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             padding: 100px 24px 60px 24px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        /* Hero Section */
+        /* Typography */
         .hero-title {
             font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
@@ -148,44 +130,27 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: 400;
             margin-bottom: 20px;
             font-variant-numeric: tabular-nums;
         }
 
-        /* BENTO GRID LAYOUT */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-
+        /* Cards */
         .card {
             background: var(--bg-card);
             border-radius: 24px;
-            padding: 24px;
+            padding: 30px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.2);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            opacity: 0;
+            transform: translateY(40px); 
         }
 
+        .card.visible { opacity: 1; transform: translateY(0); }
         .card:hover { background: var(--bg-card-hover); }
 
-        /* Grid Spanning */
-        .card-large { grid-column: span 4; }
-        .card-medium { grid-column: span 2; }
-
-        @media (max-width: 768px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .card-large, .card-medium { grid-column: span 1; }
-            body { cursor: auto; }
-            .cursor { display: none; }
-        }
-
         .card-title {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -198,26 +163,32 @@
 
         .mono-value {
             font-family: 'Space Mono', monospace;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 700;
             letter-spacing: -0.02em;
         }
 
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
         /* Progress Bars */
-        .progress-wrapper { margin-top: 10px; }
+        .progress-wrapper { margin-top: 15px; }
         .progress-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
+
         .progress-bg {
-            width: 100%; height: 6px;
+            width: 100%; height: 8px;
             background: var(--border);
             border-radius: 4px; overflow: hidden;
         }
+
         .progress-fill {
             height: 100%; width: 0%;
             background: var(--text-main);
@@ -236,7 +207,7 @@
             border-radius: 12px;
             font-size: 0.8rem;
             font-weight: 600;
-            cursor: none;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         .btn:hover { background: var(--text-muted); color: var(--bg-main); }
@@ -244,19 +215,24 @@
         /* Habit Tracker */
         .habit-box {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(128, 128, 128, 0.1); padding: 15px; border-radius: 16px; margin-top: 10px;
+            background: rgba(128, 128, 128, 0.1); padding: 20px; border-radius: 16px; margin-top: 15px;
         }
         .streak-flame { font-size: 1.5rem; margin-right: 10px; }
-        
-        /* "Now" Card */
-        .now-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            line-height: 1.4;
-            color: var(--text-main);
-        }
 
-        /* BUCKET LIST INPUT & FLIP CARDS */
+        /* Terminal / Typewriter */
+        .terminal {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+            background: #000;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .cursor { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Bucket List Input */
         .input-row { display: flex; gap: 12px; margin-top: 15px; }
         .input-row input {
             flex: 1;
@@ -267,13 +243,12 @@
             color: var(--text-main);
             font-size: 1rem; font-weight: 500;
             outline: none; transition: all 0.3s ease;
-            cursor: none;
         }
         .input-row input:focus { border-color: var(--accent); background: transparent; }
         .input-row button {
             background: var(--accent); color: white; border: none;
             padding: 0 24px; border-radius: 16px;
-            font-size: 1rem; font-weight: 600; cursor: none;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
         }
 
         /* 3D Flip Cards for Bucket List */
@@ -289,7 +264,7 @@
             background-color: transparent;
             perspective: 1000px;
             height: 100px;
-            cursor: none;
+            cursor: pointer;
         }
 
         .flip-card-inner {
@@ -340,7 +315,7 @@
         }
 
         .task-actions button {
-            background: none; border: none; cursor: none; font-size: 1.1rem;
+            background: none; border: none; cursor: pointer; font-size: 1.1rem;
         }
         .btn-delete { color: var(--danger); }
 
@@ -348,8 +323,6 @@
 </head>
 <body>
 
-    <!-- Custom Cursor & Scroll Bar -->
-    <div class="cursor" id="cursor"></div>
     <div class="scroll-progress" id="scroll-progress"></div>
 
     <div class="header">
@@ -361,100 +334,86 @@
         <!-- Hero Section -->
         <div>
             <h1 class="hero-title" id="greeting">Hello, Sachin.</h1>
-            <p class="hero-subtitle" id="live-clock">Loading time...</p>
+            <p class="hero-subtitle" id="live-clock">Syncing...</p>
         </div>
 
-        <!-- BENTO GRID -->
-        <div class="bento-grid">
-            
-            <!-- Age Stats -->
-            <div class="card card-medium">
+        <!-- Terminal / Typewriter -->
+        <div class="card reveal" style="padding: 20px; background: transparent; box-shadow: none;">
+            <div class="terminal">
+                <span id="terminal-text"></span><span class="cursor">_</span>
+            </div>
+        </div>
+
+        <!-- Age Stats -->
+        <div class="grid-2">
+            <div class="card reveal">
                 <div class="card-title">
                     Current Age 
                     <button class="btn" onclick="toggleAgeFormat()">Switch</button>
                 </div>
                 <div class="mono-value" id="age-display">0</div>
             </div>
-
-            <div class="card card-medium">
+            <div class="card reveal">
                 <div class="card-title">Years Remaining</div>
                 <div class="mono-value" id="remaining-display">0</div>
             </div>
-
-            <!-- Birthday Countdown -->
-            <div class="card card-large">
-                <div class="card-title">Next Birthday (Nov 27)</div>
-                <div class="mono-value" id="birthday-countdown" style="color: var(--accent);">Calculating...</div>
-            </div>
-
-            <!-- "Now" Card -->
-            <div class="card card-medium">
-                <div class="card-title">Currently Focused On</div>
-                <div class="now-text">Learning Advanced JavaScript<br>& Building my Dashboard 🚀</div>
-            </div>
-
-            <!-- Habit Tracker -->
-            <div class="card card-medium">
-                <div class="card-title">Habit Streak</div>
-                <div class="habit-box">
-                    <div>
-                        <span class="streak-flame">🔥</span>
-                        <strong id="streak-count">0</strong> Days
-                    </div>
-                    <button class="btn" style="background: var(--success); color: white;" onclick="logHabit()">Log</button>
-                </div>
-            </div>
-
-            <!-- Progress Bars -->
-            <div class="card card-large">
-                <div class="progress-wrapper" style="margin-top: 0;">
-                    <div class="progress-labels">
-                        <span>Life Progress</span>
-                        <span id="life-percent">0%</span>
-                    </div>
-                    <div class="progress-bg">
-                        <div class="progress-fill blue" id="life-progress-fill"></div>
-                    </div>
-                </div>
-
-                <div class="progress-wrapper" style="margin-top: 15px;">
-                    <div class="progress-labels">
-                        <span>Today's Progress</span>
-                        <span id="day-percent">0%</span>
-                    </div>
-                    <div class="progress-bg">
-                        <div class="progress-fill green" id="day-progress-fill"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bucket List -->
-            <div class="card card-large" style="margin-bottom: 40px;">
-                <div class="card-title">Bucket List (Tap to flip)</div>
-                <div class="input-row">
-                    <input type="text" id="task-input" placeholder="Add a life goal..." maxlength="30">
-                    <button onclick="addTask()">Add</button>
-                </div>
-                <ul id="bucket-list"></ul>
-            </div>
-
         </div>
+
+        <!-- Countdown -->
+        <div class="card reveal">
+            <div class="card-title">Next Birthday</div>
+            <div class="mono-value" id="birthday-countdown" style="color: var(--accent);">Calculating...</div>
+        </div>
+
+        <!-- Progress Bars -->
+        <div class="card reveal">
+            <div class="progress-wrapper">
+                <div class="progress-labels">
+                    <span>Life Progress</span>
+                    <span id="life-percent">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill blue" id="life-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="progress-wrapper" style="margin-top: 24px;">
+                <div class="progress-labels">
+                    <span>Today's Progress</span>
+                    <span id="day-percent">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill green" id="day-progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habit Tracker -->
+        <div class="card reveal">
+            <div class="card-title">Daily Habit Streak</div>
+            <div class="habit-box">
+                <div>
+                    <span class="streak-flame">🔥</span>
+                    <strong id="streak-count">0</strong> Day Streak
+                </div>
+                <button class="btn" style="background: var(--success); color: white;" onclick="logHabit()">Log Today</button>
+            </div>
+        </div>
+
+        <!-- Bucket List -->
+        <div class="card reveal">
+            <div class="card-title">Bucket List (Tap to flip)</div>
+            <div class="input-row">
+                <input type="text" id="task-input" placeholder="Add a life goal..." maxlength="40">
+                <button onclick="addTask()">Add</button>
+            </div>
+            <ul id="bucket-list"></ul>
+        </div>
+        
     </div>
 
     <script>
-        // --- 1. CUSTOM CURSOR & SCROLL BAR ---
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        const hoverElements = document.querySelectorAll('a, button, .flip-card, input');
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
+        // --- 1. SCROLL PROGRESS & ANIMATIONS ---
         window.addEventListener('scroll', () => {
             const scrollTop = document.documentElement.scrollTop;
             const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -462,13 +421,48 @@
             document.getElementById('scroll-progress').style.width = progress + '%';
         });
 
-        // --- 2. DYNAMIC GREETING ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('visible'); }, index * 50);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // --- 2. DYNAMIC GREETING & TERMINAL ---
         const hour = new Date().getHours();
         let greeting = "Hello, Sachin.";
         if (hour < 12) greeting = "Good Morning, Sachin.";
         else if (hour < 18) greeting = "Good Afternoon, Sachin.";
         else greeting = "Good Evening, Sachin.";
         document.getElementById('greeting').innerText = greeting;
+
+        const terminalLines = [
+            "> Initializing user profile: Sachin...",
+            "> Syncing biometric data...",
+            "> Loading bucket list from local storage...",
+            "> Systems optimal. Have a great day."
+        ];
+        let lineIndex = 0;
+        let charIndex = 0;
+        const terminalEl = document.getElementById('terminal-text');
+        
+        function typeTerminal() {
+            if (lineIndex < terminalLines.length) {
+                if (charIndex < terminalLines[lineIndex].length) {
+                    terminalEl.innerHTML += terminalLines[lineIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeTerminal, 30);
+                } else {
+                    terminalEl.innerHTML += "<br>";
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeTerminal, 500);
+                }
+            }
+        }
+        setTimeout(typeTerminal, 1000);
 
         // --- 3. CALCULATIONS & AGE FORMAT ---
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
@@ -557,4 +551,7 @@
                         <div class="flip-card-front">
                             <span class="task-text">${task.text}</span>
                             <div class="task-actions">
-                                <button class="btn-delete" onclick="event.stopPropagation(); deleteTa
+                                <button class="btn-delete" onclick="event.stopPropagation(); deleteTask(${task.id})">✖</button>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
