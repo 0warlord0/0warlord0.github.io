@@ -17,9 +17,7 @@
         /* Dark Mode (Default) */
         :root {
             --bg-color: #0a0a0a;
-            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
-                           radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%);
-            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-bg: rgba(15, 23, 42, 0.6);
             --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
@@ -32,8 +30,6 @@
         /* Light Mode */
         body.light-mode {
             --bg-color: #f8fafc;
-            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.2), transparent 30%),
-                           radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.2), transparent 30%);
             --card-bg: rgba(255, 255, 255, 0.7);
             --card-border: rgba(0, 0, 0, 0.1);
             --text-main: #0f172a;
@@ -46,7 +42,6 @@
 
         body {
             background-color: var(--bg-color);
-            background-image: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -54,6 +49,18 @@
             align-items: center;
             padding: 20px;
             transition: background 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Particle Canvas Background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Lets you click through it */
         }
 
         .dashboard {
@@ -69,6 +76,7 @@
             text-align: center;
             animation: fadeIn 1s ease-out;
             transition: background 0.4s ease, border 0.4s ease;
+            z-index: 10;
         }
 
         @keyframes fadeIn {
@@ -220,25 +228,100 @@
             transition: width 0.1s linear;
         }
 
-        /* Life in Weeks Grid */
-        .weeks-grid {
+        /* Bucket List Section */
+        .bucket-list-section {
+            background: var(--box-bg);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--box-border);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .bucket-list-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .input-group {
             display: flex;
-            flex-wrap: wrap;
-            gap: 3px;
-            justify-content: center;
-            margin-top: 10px;
-            opacity: 0.8;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .week-dot {
-            width: 5px;
-            height: 5px;
-            background-color: var(--box-border);
-            border-radius: 1px;
+
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+            font-family: 'Outfit', sans-serif;
         }
-        .week-dot.lived {
-            background-color: var(--accent);
-            box-shadow: 0 0 3px var(--accent);
+
+        .input-group input:focus {
+            border-color: var(--accent);
         }
+
+        .input-group button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .input-group button:hover {
+            background: var(--accent-2);
+        }
+
+        #bucket-list {
+            list-style: none;
+        }
+
+        #bucket-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid var(--box-border);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        #bucket-list li.completed span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+
+        .task-actions button:hover {
+            transform: scale(1.2);
+        }
+
+        .btn-complete { color: #22c55e; }
+        .btn-delete { color: #ef4444; }
 
         /* Quote */
         .quote-box {
@@ -249,30 +332,12 @@
             padding: 0 10px;
         }
 
-        /* Social Links */
-        .socials {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .socials a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-            border-bottom: 1px solid transparent;
-        }
-
-        .socials a:hover {
-            color: var(--accent);
-            border-bottom: 1px solid var(--accent);
-        }
-
     </style>
 </head>
 <body>
+
+    <!-- Floating Background -->
+    <canvas id="particle-canvas"></canvas>
 
     <div class="dashboard">
         <div class="top-bar">
@@ -325,54 +390,86 @@
             </div>
         </div>
 
-        <!-- Life in Weeks -->
-        <div style="margin-top: 25px;">
-            <div class="stat-title" style="text-align: left;">Life in Weeks (80 Years)</div>
-            <div class="weeks-grid" id="weeks-grid"></div>
+        <!-- Bucket List -->
+        <div class="bucket-list-section">
+            <div class="bucket-list-title">🎯 My Bucket List</div>
+            <div class="input-group">
+                <input type="text" id="task-input" placeholder="Add a new life goal..." maxlength="40">
+                <button onclick="addTask()">Add</button>
+            </div>
+            <ul id="bucket-list">
+                <!-- Tasks will appear here -->
+            </ul>
         </div>
 
         <!-- Quote -->
         <div class="quote-box" id="daily-quote"></div>
 
-        <!-- Socials -->
-        <div class="socials">
-            <a href="https://github.com/0warlord0" target="_blank">GitHub</a>
-            <a href="#" target="_blank">Instagram</a>
-            <a href="#" target="_blank">LinkedIn</a>
-        </div>
     </div>
 
     <script>
-        // DOB: Nov 27, 1998, 8:15 PM
+        // --- 1. PARTICLE BACKGROUND LOGIC ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            const numberOfParticles = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+
+        // --- 2. DASHBOARD CALCULATIONS ---
         const birthDate = new Date(1998, 10, 27, 20, 15, 0); 
         const expectedLifespanYears = 80;
-        const totalWeeks = expectedLifespanYears * 52.1775; // Average weeks in a year
-
-        // 1. Generate the Weeks Grid once on load
-        const weeksGrid = document.getElementById('weeks-grid');
-        for (let i = 0; i < totalWeeks; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'week-dot';
-            weeksGrid.appendChild(dot);
-        }
-        const weekDots = document.querySelectorAll('.week-dot');
-
-        // 2. Daily Quotes Array
-        const quotes = [
-            "Time is the most valuable thing a man can spend.",
-            "The purpose of our lives is to be happy.",
-            "Life is what happens when you're busy making other plans.",
-            "Get busy living or get busy dying.",
-            "You only live once, but if you do it right, once is enough."
-        ];
 
         function updateDashboard() {
             const now = new Date();
-            
-            // Clock
             document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
-            // --- AGE & REMAINING ---
+            // Age & Remaining
             const msSinceBirth = now - birthDate;
             const yearsSinceBirth = msSinceBirth / (1000 * 60 * 60 * 24 * 365.25);
             const yearsRemaining = expectedLifespanYears - yearsSinceBirth;
@@ -380,60 +477,105 @@
             document.getElementById('age-display').innerText = yearsSinceBirth.toFixed(8);
             document.getElementById('remaining-display').innerText = yearsRemaining.toFixed(8);
 
-            // --- LIFE PROGRESS BAR ---
+            // Life Progress
             const lifePercent = (yearsSinceBirth / expectedLifespanYears) * 100;
             document.getElementById('life-progress-fill').style.width = lifePercent + "%";
             document.getElementById('life-percent').innerText = lifePercent.toFixed(2) + "%";
 
-            // --- DAY PROGRESS BAR ---
+            // Day Progress
             const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
             const dayPercent = ((now - startOfDay) / (endOfDay - startOfDay)) * 100;
             document.getElementById('day-progress-fill').style.width = dayPercent + "%";
             document.getElementById('day-percent').innerText = dayPercent.toFixed(2) + "%";
 
-            // --- BIRTHDAY COUNTDOWN ---
+            // Birthday Countdown
             let nextBirthday = new Date(now.getFullYear(), 10, 27, 20, 15, 0);
-            if (now > nextBirthday) {
-                nextBirthday.setFullYear(now.getFullYear() + 1);
-            }
+            if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
             const diff = nextBirthday - now;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const mins = Math.floor((diff / (1000 * 60)) % 60);
             const secs = Math.floor((diff / 1000) % 60);
-            document.getElementById('birthday-countdown').innerText = 
-                `${days}d ${hours}h ${mins}m ${secs}s`;
-
-            // --- WEEKS GRID ---
-            const weeksLived = Math.floor(yearsSinceBirth * 52.1775);
-            weekDots.forEach((dot, index) => {
-                if (index < weeksLived) {
-                    dot.classList.add('lived');
-                } else {
-                    dot.classList.remove('lived');
-                }
-            });
+            document.getElementById('birthday-countdown').innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
 
-        // Set daily quote based on the day of the year so it changes every day
+        // --- 3. DAILY QUOTE ---
+        const quotes = [
+            "Time is the most valuable thing a man can spend.",
+            "The purpose of our lives is to be happy.",
+            "Life is what happens when you're busy making other plans.",
+            "Get busy living or get busy dying.",
+            "You only live once, but if you do it right, once is enough."
+        ];
         const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
         document.getElementById('daily-quote').innerText = `"${quotes[dayOfYear % quotes.length]}"`;
 
-        // Theme Toggle Logic
+
+        // --- 4. BUCKET LIST LOGIC (Local Storage) ---
+        const taskInput = document.getElementById('task-input');
+        const bucketList = document.getElementById('bucket-list');
+        let tasks = JSON.parse(localStorage.getItem('sachinTasks')) || [];
+
+        function saveTasks() {
+            localStorage.setItem('sachinTasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (text === '') return;
+            tasks.push({ id: Date.now(), text: text, completed: false });
+            taskInput.value = '';
+            saveTasks();
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(task => {
+                if (task.id === id) return { ...task, completed: !task.completed };
+                return task;
+            });
+            saveTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+        }
+
+        function renderTasks() {
+            bucketList.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                if (task.completed) li.classList.add('completed');
+
+                li.innerHTML = `
+                    <span>${task.text}</span>
+                    <div class="task-actions">
+                        <button class="btn-complete" onclick="toggleTask(${task.id})">✔</button>
+                        <button class="btn-delete" onclick="deleteTask(${task.id})">✖</button>
+                    </div>
+                `;
+                bucketList.appendChild(li);
+            });
+        }
+
+        // Allow pressing "Enter" to add a task
+        taskInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // Theme Toggle
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const btn = document.getElementById('theme-btn');
-            if (document.body.classList.contains('light-mode')) {
-                btn.innerText = '☀️';
-            } else {
-                btn.innerText = '🌙';
-            }
+            btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
         }
 
-        // Run loop
+        // Initialize
+        renderTasks();
         updateDashboard();
-        setInterval(updateDashboard, 1000); // Update every second
+        setInterval(updateDashboard, 1000); 
     </script>
 </body>
 </html>
