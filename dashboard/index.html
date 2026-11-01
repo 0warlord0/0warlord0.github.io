@@ -292,7 +292,6 @@
 
     <div class="container">
         <div class="hero">
-            <h1 id="greeting">Hello, Sachin.</h1>
             <p id="live-clock">Loading...</p>
         </div>
 
@@ -379,14 +378,6 @@
 
         function updateDashboard() {
             const now = new Date();
-
-            // DYNAMIC GREETING
-            const hour = now.getHours();
-            let greeting = "Hello, Sachin.";
-            if (hour < 12) greeting = "Good Morning, Sachin.";
-            else if (hour < 18) greeting = "Good Afternoon, Sachin.";
-            else greeting = "Good Evening, Sachin.";
-            document.getElementById('greeting').innerText = greeting;
 
             // CLOCK
             document.getElementById('live-clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
