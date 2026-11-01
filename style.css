@@ -10,7 +10,7 @@ html {
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
   line-height: 1.8;
   background: #fff;
@@ -56,7 +56,7 @@ a:focus {
 }
 
 .about {
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 0.5rem;
 }
 
 h2 {
@@ -66,7 +66,8 @@ h2 {
   line-height: 1.25;
 }
 
-.post-list {
+.post-list,
+.link-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -77,22 +78,22 @@ h2 {
 }
 
 .post-list time {
+  display: block;
   color: #515151;
   font-size: 14px;
 }
 
 .post-list li > a {
   display: block;
-  margin-top: 12px;
+  margin-top: 4px;
   color: #337ab7;
   font-size: 24px;
   font-weight: 400;
   line-height: 1.4;
 }
 
-.sample-label {
-  color: #515151;
-  font-size: 0.85rem;
+.link-list li {
+  margin-bottom: 0.35rem;
 }
 
 footer {
@@ -101,6 +102,29 @@ footer {
 
 footer p {
   margin: 0;
+}
+
+.article-nav {
+  margin: 0.5rem 0 1.25rem;
+}
+
+.article h1 {
+  margin: 1rem 0 0.3rem;
+  color: #111;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.article time {
+  display: block;
+  margin-bottom: 1.2rem;
+  color: #515151;
+  font-size: 14px;
+}
+
+.article p {
+  margin: 0 0 1rem;
 }
 
 @media (max-width: 520px) {
