@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sachin's notes</title>
+    <description>Notes from Sachin, a civil engineer from coastal Karnataka who likes to code.</description>
+    <link>https://0warlord0.github.io/</link>
+    <language>en</language>
+    <lastBuildDate>Sun, 01 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>A dashboard for the parts of life I forget</title>
+      <link>https://0warlord0.github.io/posts/a-life-dashboard.html</link>
+      <guid isPermaLink="true">https://0warlord0.github.io/posts/a-life-dashboard.html</guid>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <description><![CDATA[I enjoy making little systems, maybe because engineering trains you to notice how many moving parts sit behind something that looks simple. Lately I've been curious about putting a few useful parts of my own life on one dashboard.]]></description>
+    </item>
+    <item>
+      <title>Learning to code with an engineer's eye</title>
+      <link>https://0warlord0.github.io/posts/civil-engineering-and-ai.html</link>
+      <guid isPermaLink="true">https://0warlord0.github.io/posts/civil-engineering-and-ai.html</guid>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <description><![CDATA[As a civil engineer, I'm used to thinking about what a thing has to do before worrying about how it looks. A drawing can be neat and still miss the point if the structure doesn't work. Coding has started to feel familiar in that way.]]></description>
+    </item>
+    <item>
+      <title>Why I'm starting this little blog</title>
+      <link>https://0warlord0.github.io/posts/a-small-introduction.html</link>
+      <guid isPermaLink="true">https://0warlord0.github.io/posts/a-small-introduction.html</guid>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <description><![CDATA[I keep collecting small thoughts in random places: a note on my phone, a file on my laptop, a message I send myself and never open again. Starting a blog is my attempt to give some of those thoughts one home.]]></description>
+    </item>
+  </channel>
+</rss>
